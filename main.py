@@ -70,6 +70,7 @@ class Application(Frame):
     def main_menu(self):
         wait_var = IntVar()
 
+        Label(self, text = 'Current Version: 0.1.9', fg = 'white', bg = 'deep sky blue', justify = 'left', width = 71).grid(sticky = W)
         Label(self, text = 'Welcome to the J & L Data Analyzer', fg = 'white', bg = 'deep sky blue', width = 50, height = 2, font = ('Calibri', 15)).grid(sticky = W)
         open_file_window = Button(self, text = 'Open File Explorer', width = 30, bg = 'lime', command = lambda: wait_var.set(1))
         open_file_window.grid(sticky = N)
@@ -139,6 +140,6 @@ class Application(Frame):
 
 # Create Tkinter window and start the application
 main_window = Tk()
-setup_window(main_window, 500, 500, name = 'J & L Data Analyzer')
+setup_window(main_window, 500, 300, name = 'J & L Data Analyzer')
 app = Application(main_window)
 main_window.mainloop()
