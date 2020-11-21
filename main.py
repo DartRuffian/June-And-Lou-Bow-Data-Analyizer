@@ -70,7 +70,7 @@ class Application(Frame):
     def main_menu(self):
         wait_var = IntVar()
 
-        Label(self, text = 'Current Version: 0.1.9', fg = 'white', bg = 'deep sky blue', justify = 'left', width = 71).grid(sticky = W)
+        Label(self, text = 'Current Version: 0.1.10', fg = 'white', bg = 'deep sky blue', justify = 'left', width = 71).grid(sticky = W)
         Label(self, text = 'Welcome to the J & L Data Analyzer', fg = 'white', bg = 'deep sky blue', width = 50, height = 2, font = ('Calibri', 15)).grid(sticky = W)
         open_file_window = Button(self, text = 'Open File Explorer', width = 30, bg = 'lime', command = lambda: wait_var.set(1))
         open_file_window.grid(sticky = N)
@@ -95,7 +95,7 @@ class Application(Frame):
         self.data_window = Toplevel(main_window)
         setup_window(self.data_window, 800, 540, name = f'Viewing Data of {file_name}')
 
-        Label(self.data_window, text = 'Use the scrollbar to scroll downt the list').grid(row = 0,  sticky = W)
+        Label(self.data_window, text = 'Use the scrollbar to scroll down the list').grid(row = 0,  sticky = W)
 
         self.sales = []
 
@@ -121,11 +121,17 @@ class Application(Frame):
         Label(self.data_window, text = '# of Product Sold').grid(row = 1, column = 2, sticky = W)
 
         counter = 0
+        totalSold = 0
         for sale in self.sales:
             counter += 1
             self.product_title_list.insert(END, f'{counter}: {sale[0]}')
             self.product_vtitle_list.insert(END, sale[1])
             self.product_sold_list.insert(END, sale[2])
+            totalSold += int(sale[2])
+
+        self.product_title_list.insert(END, '')
+        self.product_vtitle_list.insert(END, '')
+        self.product_sold_list.insert(END, f'Total Bows Sold: {totalSold}')
 
         self.product_title_list.grid(row = 2, column = 0, sticky = W)
         self.product_vtitle_list.grid(row = 2, column = 1, sticky = W)
