@@ -39,11 +39,11 @@ def create_file_explorer(window_variable):
     )
 
     # The user either hit the close window button or 'Cancel'
-    if file_dir == '':
-        Label(window_variable, text = 'Make sure to select either an excel spreadsheet or a .csv file!').grid()
-        return
+    #if file_dir == '':
+        #Label(window_variable, text = 'Make sure to select a .csv file!').grid()
+        #return
 
-    return(file_dir)
+    return file_dir
 
 class Application(Frame):
     def __init__(self, master):
@@ -51,6 +51,46 @@ class Application(Frame):
         self.grid()
         self.BASE_DIR = getcwd()
         self.main_menu()
+
+    # Main menu of the program, features file explorer and exit button
+    def main_menu(self):
+        wait_var = StringVar()
+
+        Label(self, text = 'Current Version: BETA 0.0.10', fg = 'white', bg = 'deep sky blue', justify = 'left', width = 71).grid(sticky = W)
+        Label(self, text = 'Welcome to the J & L Data Analyzer', fg = 'white', bg = 'deep sky blue', width = 50, height = 2, font = ('Calibri', 15)).grid(sticky = W)
+
+        open_file_window = Button(self, text = 'Open File Explorer', width = 30, bg = 'lime', command = lambda: wait_var.set('load_data'))
+        open_file_window.grid()
+
+        #test_button = Button(self, text = 'Placeholder text', width = 30, bg = 'sky blue', command = lambda: wait_var.set('placeholder'))
+        #test_button.grid()
+
+        Button(self, text = 'Exit Program', width = 30, bg = 'red', command = main_window.destroy).grid()
+
+        # probably could use something else here but this is just to wait for the 'wait_var' variable
+        # to change its value
+        open_file_window.wait_variable(wait_var)
+
+        if wait_var.get() == 'placeholder':
+            clear_window(self)
+
+        elif wait_var.get() == 'load_data':
+            file_dir = create_file_explorer(main_window)
+
+            Label(self, text = f'Opened file at: \n{file_dir}', fg = 'green', wraplength = 500, justify = 'left').grid(sticky = W)
+
+            # self.file_dir contains the actual file name, which is not desired as a directory change is needed
+            # seperate the file name from the rest of the directory
+            if file_dir is None or file_dir == '':
+                Label(self, text = 'Make sure to select a .csv file! (The program will need to be restarted)').grid()
+
+            else:
+                file_dir = file_dir.split('/') # seperate file dir by forward slashes
+                file_name = file_dir[-1] # self.file_dir[-1] is the name of the file
+                del file_dir[-1] # remove file name from directory
+                file_dir = '/'.join(file_dir) # convert back to string
+
+                self.load_data(file_dir, file_name)
 
     # Sets the yview of all listboxes to the same value
     def OnVsb(self, *args):
@@ -65,30 +105,6 @@ class Application(Frame):
         # this prevents default bindings from firing, which
         # would end up scrolling the widget twice
         return 'break'
-
-    # Main menu of the program, features file explorer and exit button
-    def main_menu(self):
-        wait_var = IntVar()
-
-        Label(self, text = 'Current Version: 0.1.10', fg = 'white', bg = 'deep sky blue', justify = 'left', width = 71).grid(sticky = W)
-        Label(self, text = 'Welcome to the J & L Data Analyzer', fg = 'white', bg = 'deep sky blue', width = 50, height = 2, font = ('Calibri', 15)).grid(sticky = W)
-        open_file_window = Button(self, text = 'Open File Explorer', width = 30, bg = 'lime', command = lambda: wait_var.set(1))
-        open_file_window.grid(sticky = N)
-        Button(self, text = 'Exit Program', width = 30, bg = 'red', command = main_window.destroy).grid(sticky = N)
-
-        open_file_window.wait_variable(wait_var)
-        file_dir = create_file_explorer(main_window)
-
-        Label(self, text = f'Opened file at: \n{file_dir}', fg = 'green', wraplength = 500, justify = 'left').grid(sticky = W)
-
-        # self.file_dir contains the actual file name, which is not desired as a directory change is needed
-        # seperate the file name from the rest of the directory
-        file_dir = file_dir.split('/') # seperate file dir by forward slashes
-        file_name = file_dir[-1] # self.file_dir[-1] is the name of the file
-        del file_dir[-1] # remove file name from directory
-        file_dir = '/'.join(file_dir) # convert back to string
-
-        self.load_data(file_dir, file_name)
 
     # Takes the file_dir and file_name, opens the file and loads its data
     def load_data(self, file_dir, file_name):
